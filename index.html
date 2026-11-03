@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth snap-y snap-mandatory h-full overflow-y-scroll">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNO — Musical Project</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts for English and CJK Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@200;300;400;500&family=Noto+Sans+JP:wght@300;400;500&family=Noto+Sans+KR:wght@300;400;500&family=Noto+Sans+SC:wght@300;400;500&family=Noto+Serif+JP:wght@300;400&family=Noto+Serif+KR:wght@300;400&family=Noto+Serif+SC:wght@300;400&display=swap" rel="stylesheet">
+    
+    <!-- External CSS stylesheet -->
+    <link rel="stylesheet" href="styles/styles.css">
+
+    <!-- Three.js for interactive WebGL particle wave -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Title icon-->
+    <link rel="icon" type="image/png" href="media/UNO.png">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', '"Noto Serif JP"', '"Noto Serif KR"', '"Noto Serif SC"', 'serif'],
+                        sans: ['"Inter"', '"Noto Sans JP"', '"Noto Sans KR"', '"Noto Sans SC"', 'sans-serif'],
+                    },
+                    colors: {
+                        royal: {
+                            950: '#000000',
+                            900: '#050505',
+                            800: '#0a0a0a',
+                            700: '#141414',
+                        },
+                        silver: {
+                            50: '#F0F4F8',
+                            100: '#E2E8F0',
+                            200: '#CBD5E1',
+                            300: '#94A3B8',
+                        }
+                    },
+                    letterSpacing: {
+                        widest2x: '0.3em',
+                        widest3x: '0.6em',
+                        widest4x: '0.9em',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body lang="en" class="bg-black text-silver-100 font-sans antialiased selection:bg-neutral-800 selection:text-silver-50 transition-theme dark h-full overflow-hidden">
+
+    <!-- WebGL Background Canvas -->
+    <div id="canvas-container" class="fixed inset-0 pointer-events-none z-0 opacity-50 transition-opacity duration-1000"></div>
+
+    <!-- Navigation Header -->
+    <header class="fixed top-0 left-0 right-0 z-50 transition-theme py-4 md:py-7 px-6 md:px-16 backdrop-blur-md bg-opacity-20 border-b border-silver-100/10 dark:border-silver-100/10 light:border-black/10">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <a href="#hero" class="font-serif text-3xl md:text-4xl tracking-widest3x font-light uppercase hover:opacity-70 transition-opacity">
+                UNO
+            </a>
+
+            <!-- Desktop Navigation Links -->
+            <nav class="hidden md:flex items-center space-x-12 text-sm tracking-widest2x uppercase font-light">
+                <a href="#about" data-i18n="nav_about" class="hover:opacity-50 transition-opacity">Concept</a>
+                <a href="#music" data-i18n="nav_music" class="hover:opacity-50 transition-opacity">Music</a>
+                <a href="#contact" data-i18n="nav_contact" class="hover:opacity-50 transition-opacity">Contact</a>
+            </nav>
+
+            <div class="flex items-center space-x-6">
+                <!-- Language Selector Dropdown -->
+                <div class="relative inline-block text-left">
+                    <select id="lang-selector" class="bg-transparent border border-current/20 rounded-none px-3 py-1 text-xs uppercase tracking-wider focus:outline-none cursor-pointer hover:bg-white/10 transition-colors">
+                        <option value="en" class="bg-black text-white">EN</option>
+                        <option value="ja" class="bg-black text-white">JA</option>
+                        <option value="ko" class="bg-black text-white">KO</option>
+                        <option value="zh" class="bg-black text-white">ZH</option>
+                    </select>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden p-2 text-current" aria-label="Open Menu">
+                    <i data-lucide="menu" class="w-7 h-7"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Drawer Nav -->
+    <div id="mobile-menu" class="fixed inset-0 z-40 bg-black/95 text-silver-100 flex flex-col justify-center items-center space-y-10 text-2xl font-serif tracking-widest uppercase opacity-0 pointer-events-none transition-all duration-500">
+        <button id="mobile-close-btn" class="absolute top-7 right-7 p-2" aria-label="Close Menu">
+            <i data-lucide="x" class="w-8 h-8"></i>
+        </button>
+        <a href="#hero" data-i18n="nav_home" class="mobile-link hover:italic">Home</a>
+        <a href="#about" data-i18n="nav_about" class="mobile-link hover:italic">Concept</a>
+        <a href="#music" data-i18n="nav_music" class="mobile-link hover:italic">Music</a>
+        <a href="#contact" data-i18n="nav_contact" class="mobile-link hover:italic">Contact</a>
+    </div>
+
+    <!-- Main Content Wrapper with JS Section Scroll Locking -->
+    <main id="section-container" class="relative z-10 h-full w-full transition-transform duration-700 ease-out">
+
+       <!-- Screen 1: Minimalist Pure Hero -->
+        <section id="hero" data-theme-trigger="dark" class="h-screen w-full flex items-center justify-center px-6 relative flex-shrink-0">
+            <div class="flex items-center justify-center w-full select-none transform translate-x-[0.3em]">
+                <img src="media/UNO.png" alt="UNO" draggable="false" class="w-[clamp(16rem,55vw,50rem)] h-auto object-contain">
+            </div>
+        </section>
+
+        <!-- Section 2: Manifesto & Concept -->
+        <section id="about" data-theme-trigger="light" class="h-screen w-full flex items-center px-6 md:px-16 pt-20 pb-6 md:py-12 transition-theme flex-shrink-0 relative overflow-hidden">
+            <div class="max-w-6xl mx-auto grid md:grid-cols-12 gap-5 md:gap-12 lg:gap-16 items-center w-full relative z-10">
+                <div class="md:col-span-5 space-y-3 md:space-y-8">
+                    <h2 class="dynamic-serif text-4xl sm:text-6xl lg:text-7xl font-light leading-tight" data-i18n="about_title">
+                        UNO <br><span class="italic font-normal">verse</span>
+                    </h2>
+                    <div class="w-20 h-px bg-current opacity-40"></div>
+                </div>
+                <div class="md:col-span-7 space-y-3 md:space-y-8 text-[15px] sm:text-xl md:text-2xl font-light leading-relaxed opacity-90">
+                    <span data-i18n="about_tag" class="text-sm tracking-widest2x uppercase opacity-50 block">Welcome to my UNOverse</span>
+                    <p data-i18n="about_p1">
+                        Welcome to my sonic dimension — the UNOverse. This is a realm where intricate polyrhythmic structures of progressive rock intertwine with the grand, monumental breath of classical symphony.
+                    </p>
+                    <p data-i18n="about_p2">
+                        Deals with no rigid boundaries: every composition is built as an architectural monolith, uniting virtuoso instrumental dynamics, deep emotional layers, and a cinematic scope.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Music & Streaming Platforms -->
+        <section id="music" data-theme-trigger="dark" class="h-screen w-full flex items-center px-6 md:px-16 pt-20 pb-6 md:py-12 transition-theme flex-shrink-0">
+            <div class="max-w-7xl mx-auto space-y-5 sm:space-y-10 md:space-y-14 w-full">
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                    <div>
+                        <span data-i18n="music_tag" class="text-sm tracking-widest2x uppercase opacity-50 block mb-2">Discography</span>
+                        <h2 data-i18n="music_title" class="dynamic-serif text-4xl sm:text-7xl font-light"><i>RELEASES</i></h2>
+                    </div>
+                    <p data-i18n="music_subtitle" class="hidden sm:block text-xs md:text-sm tracking-widest uppercase opacity-60 max-w-md">
+                        Hover over any release to access direct streaming options across platforms.
+                    </p>
+                </div>
+
+                <!-- 4 Releases Grid -->
+                <div id="releases-track" class="relative flex sm:grid sm:grid-cols-2 lg:grid-cols-4 overflow-x-auto sm:overflow-visible snap-x snap-mandatory sm:snap-none gap-4 sm:gap-6 lg:gap-8 no-scrollbar">
+                    
+                    <!-- Release 4: 116 / Coming Soon -->
+                    <div class="glass-panel p-4 sm:p-6 rounded-none space-y-4 sm:space-y-6 group hover:border-silver-200/40 transition-all relative w-full shrink-0 snap-center sm:w-auto sm:shrink">
+                        <div class="relative aspect-[5/4] sm:aspect-square rounded-none overflow-hidden bg-neutral-950 flex items-center justify-center border border-white/10">
+                            <svg class="absolute inset-0 w-full h-full opacity-40 group-hover:opacity-60 transition-opacity duration-500" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#1e1b4b" />
+                                        <stop offset="50%" stop-color="#0f172a" />
+                                        <stop offset="100%" stop-color="#030712" />
+                                    </linearGradient>
+                                </defs>
+                                <rect width="400" height="400" fill="url(#grad1)"/>
+                                <circle cx="200" cy="200" r="140" stroke="rgba(226,232,240,0.15)" stroke-width="1" stroke-dasharray="8 8"/>
+                                <circle cx="200" cy="200" r="90" stroke="rgba(226,232,240,0.25)" stroke-width="1"/>
+                                <path d="M200 60 L200 340 M60 200 L340 200" stroke="rgba(226,232,240,0.1)" stroke-width="1"/>
+                            </svg>
+                            
+                            <div class="absolute inset-0 bg-gradient-to-tr from-black/80 via-transparent to-transparent"></div>
+                            
+                            <div class="absolute inset-0 bg-black/90 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center space-y-2 p-6 z-20">
+                                <span data-i18n="coming_soon" class="font-serif italic text-2xl tracking-widest text-silver-100">Coming Soon</span>
+                                <span data-i18n="in_production" class="text-[10px] tracking-widest2x uppercase opacity-50">In Production</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <span data-i18n="rel_116_tag" class="text-xs tracking-widest uppercase opacity-50 block">Single ※ Not released yet</span>
+                            <h3 class="dynamic-serif text-2xl md:text-3xl font-light tracking-wide mt-2">116</h3>
+                            <p data-i18n="rel_116_desc" class="text-xs md:text-sm opacity-70 font-light mt-2 leading-relaxed">Noah's Turn official OST.</p>
+                        </div>
+                    </div>
+
+                    <!-- Release 3: Colourform / Coming Soon -->
+                    <div class="glass-panel p-4 sm:p-6 rounded-none space-y-4 sm:space-y-6 group hover:border-silver-200/40 transition-all relative w-full shrink-0 snap-center sm:w-auto sm:shrink">
+                        <div class="relative aspect-[5/4] sm:aspect-square rounded-none overflow-hidden bg-neutral-950 flex items-center justify-center border border-white/10">
+                            <svg class="absolute inset-0 w-full h-full opacity-40 group-hover:opacity-60 transition-opacity duration-500" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <linearGradient id="grad2" x1="100%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" stop-color="#311026" />
+                                        <stop offset="50%" stop-color="#110c1d" />
+                                        <stop offset="100%" stop-color="#000000" />
+                                    </linearGradient>
+                                </defs>
+                                <rect width="400" height="400" fill="url(#grad2)"/>
+                                <polygon points="200,60 340,300 60,300" stroke="rgba(226,232,240,0.2)" stroke-width="1.5" fill="none"/>
+                                <circle cx="200" cy="220" r="60" stroke="rgba(226,232,240,0.25)" stroke-width="1"/>
+                            </svg>
+
+                            <div class="absolute inset-0 bg-gradient-to-bl from-black/80 via-transparent to-transparent"></div>
+                            
+                            <div class="absolute inset-0 bg-black/90 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center space-y-2 p-6 z-20">
+                                <span data-i18n="coming_soon" class="font-serif italic text-2xl tracking-widest text-silver-100">Coming Soon</span>
+                                <span data-i18n="in_production" class="text-[10px] tracking-widest2x uppercase opacity-50">In Production</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <span data-i18n="rel_cf_tag" class="text-xs tracking-widest uppercase opacity-50 block">Single ※ Nearly release</span>
+                            <h3 class="dynamic-serif text-2xl md:text-3xl font-light tracking-wide mt-2">Colourform</h3>
+                            <p class="text-xs md:text-sm opacity-70 font-light mt-2 leading-relaxed">UNO × axiomsound × 一葉 / Hitoha</p>
+                        </div>
+                    </div>
+
+                    <!-- Release 2: Automaton Rust Tears -->
+                    <div class="glass-panel p-4 sm:p-6 rounded-none space-y-4 sm:space-y-6 group hover:border-silver-200/40 transition-all relative w-full shrink-0 snap-center sm:w-auto sm:shrink">
+                        <div class="relative aspect-[5/4] sm:aspect-square rounded-none overflow-hidden bg-black flex items-center justify-center">
+                            <img src="https://i1.sndcdn.com/artworks-GlATEWl9GyBw9xza-OXSaIw-t500x500.jpg" alt="Automaton Rust Tears" class="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-br from-neutral-900/40 via-neutral-950/40 to-black/60 opacity-60"></div>
+                            
+                            <div class="absolute inset-0 bg-black/90 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center space-y-4 p-6 z-20">
+                                <span data-i18n="listen_on" class="text-xs tracking-widest2x uppercase text-silver-300 mb-1">Listen On</span>
+                                <div class="flex flex-col gap-2.5 w-full max-w-[200px]">
+                                    <a href="https://www.youtube.com/watch?v=skwdVeQ5IPQ&list=RDskwdVeQ5IPQ&start_radio=1" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-2 py-3 px-3 rounded-none bg-silver-100/10 hover:bg-silver-100/25 text-silver-50 text-xs transition-colors">
+                                        <i data-lucide="play" class="w-4 h-4"></i> YouTube
+                                    </a>
+                                    <a href="https://soundcloud.com/unohtumaton/automaton_rust_tears" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-2 py-3 px-3 rounded-none bg-silver-100/10 hover:bg-silver-100/25 text-silver-50 text-xs transition-colors">
+                                        <i data-lucide="cloud" class="w-4 h-4"></i> SoundCloud
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <span data-i18n="rel_2026_tag" class="text-xs tracking-widest uppercase opacity-50 block">Single ※ 2026</span>
+                            <h3 class="dynamic-serif text-2xl md:text-3xl font-light tracking-wide mt-2">Automaton Rust Tears</h3>
+                            <p class="text-xs md:text-sm opacity-70 font-light mt-2 leading-relaxed">
+                                <img src="media/yokaze.webp" alt="" draggable="false" class="inline-block h-[3em] w-auto align-middle mx-1 opacity-90"> <span data-i18n="exclusive">exclusive!</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Release 1: Genuine Habitat -->
+                    <div class="glass-panel p-4 sm:p-6 rounded-none space-y-4 sm:space-y-6 group hover:border-silver-200/40 transition-all relative w-full shrink-0 snap-center sm:w-auto sm:shrink">
+                        <div class="relative aspect-[5/4] sm:aspect-square rounded-none overflow-hidden bg-black flex items-center justify-center">
+                            <img src="https://i1.sndcdn.com/artworks-SGZKudDOofwPcbLY-NykKbw-t500x500.jpg" alt="Genuine habitat" class="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-tr from-neutral-950/40 via-black/40 to-neutral-900/60 opacity-60"></div>
+                            
+                            <div class="absolute inset-0 bg-black/90 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center space-y-4 p-6 z-20">
+                                <span data-i18n="listen_on" class="text-xs tracking-widest2x uppercase text-silver-300 mb-1">Listen On</span>
+                                <div class="flex flex-col gap-2.5 w-full max-w-[200px]">
+                                    <a href="https://www.youtube.com/watch?v=9OaykQwlQ6w&list=RD9OaykQwlQ6w&start_radio=1" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-2 py-3 px-3 rounded-none bg-silver-100/10 hover:bg-silver-100/25 text-silver-50 text-xs transition-colors">
+                                        <i data-lucide="play" class="w-4 h-4"></i> YouTube
+                                    </a>
+                                    <a href="https://soundcloud.com/unohtumaton/genuine_habitat" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-2 py-3 px-3 rounded-none bg-silver-100/10 hover:bg-silver-100/25 text-silver-50 text-xs transition-colors">
+                                        <i data-lucide="cloud" class="w-4 h-4"></i> SoundCloud
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <span data-i18n="rel_2026_tag" class="text-xs tracking-widest uppercase opacity-50 block">Single ※ 2026</span>
+                            <h3 class="dynamic-serif text-2xl md:text-3xl font-light tracking-wide mt-2">Genuine habitat</h3>
+                            <p class="text-xs md:text-sm opacity-70 font-light mt-2 leading-relaxed">
+                                <img src="media/yokaze.webp" alt="" draggable="false" class="inline-block h-[3em] w-auto align-middle mx-1 opacity-90"> <span data-i18n="exclusive">exclusive!</span>
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Carousel dots (mobile only) -->
+                <div id="releases-dots" class="flex sm:hidden justify-center items-center gap-2"></div>
+            </div>
+        </section>
+
+        <!-- Section 4: Contact -->
+        <section id="contact" data-theme-trigger="light" class="h-screen w-full flex items-center justify-center px-6 md:px-16 pt-20 pb-6 md:py-12 transition-theme flex-shrink-0 relative overflow-hidden">
+            
+            <div class="max-w-4xl mx-auto w-full text-center space-y-5 md:space-y-12 relative z-10">
+                <div class="space-y-4">
+                    <span data-i18n="contact_tag" class="text-sm tracking-widest2x uppercase opacity-50 block">Inquiries</span>
+                    <h2 data-i18n="contact_title" class="dynamic-serif text-5xl sm:text-8xl font-light"><i>CONTACT</i></h2>
+                    <p data-i18n="contact_subtitle" class="font-serif text-base sm:text-2xl opacity-75">Labels, artwork, 3D designers, producers who wanna collab, anyone..</p>
+                </div>
+
+                <div class="glass-panel p-6 sm:p-16 rounded-none space-y-5 md:space-y-8 max-w-2xl mx-auto shadow-2xl border border-current/15">
+                    <div class="space-y-3">
+                        <span data-i18n="contact_email_tag" class="text-xs tracking-widest uppercase opacity-60 block">Official Dispatch Email</span>
+                        <a href="mailto:uno.mc.official@gmail.com" id="email-link" class="font-mono text-xl sm:text-3xl md:text-4xl font-light tracking-wider hover:opacity-75 transition-opacity block break-all">
+                            uno.mc.official@gmail.com
+                        </a>
+                    </div>
+                    
+                    <button id="copy-email-btn" class="px-10 py-4 rounded-none border border-current text-xs sm:text-sm uppercase tracking-widest2x hover:bg-black hover:text-silver-50 dark:hover:bg-silver-50 dark:hover:text-black transition-all duration-300 flex items-center justify-center gap-3 mx-auto">
+                        <i data-lucide="copy" class="w-4 h-4"></i>
+                        <span data-i18n="btn_copy">Copy Email</span>
+                    </button>
+                </div>
+
+                <div class="pt-4 md:pt-8 border-t border-current/15 flex flex-wrap justify-center gap-10 text-xs sm:text-sm tracking-widest uppercase opacity-80">
+                    <a href="https://boosty.to/unohtumaton" target="_blank" rel="noopener noreferrer" data-i18n="boosty_link" class="hover:opacity-100 transition-opacity">OR SUPPORT US ON BOOSTY 🧡</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Notification Toast -->
+    <div id="toast" data-i18n="toast_copied" class="fixed bottom-10 right-10 z-50 bg-black text-silver-50 dark:bg-silver-50 dark:text-black px-8 py-4 rounded-none text-xs uppercase tracking-widest opacity-0 pointer-events-none transition-all duration-300 transform translate-y-4 shadow-2xl border border-current/20">
+        Email Copied to Clipboard
+    </div>
+
+    <!-- External JavaScript File -->
+    <script src="scripts/scripts.js"></script>
+</body>
+</html>
