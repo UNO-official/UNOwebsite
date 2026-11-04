@@ -632,7 +632,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             any = true;
 
             c.root.scale.setScalar(s);
-            c.root.position.set(c.side === 1 ? 22 - w / 2 : w / 2 - 22, h / 2 - (r.top + 112 + 160 * s), 0);
+            c.root.position.set(c.side === 1 ? 22 - w / 2 : w / 2 - 22, h / 2 - (r.top + 112 + 160 * s + 45), 0);
             c.root.updateMatrixWorld(true);
             c.pivot.getWorldPosition(jw);
 
