@@ -67,3 +67,11 @@ html, body { overscroll-behavior: none; }
 .animated-dot {
     animation: float-dot ease-in-out infinite alternate;
 }
+
+@keyframes scroll-hint {
+    0%, 100% { transform: translateY(0); opacity: 0.25; }
+    50% { transform: translateY(10px); opacity: 0.9; }
+}
+.scroll-hint {
+    animation: scroll-hint 2s ease-in-out infinite;
+}
