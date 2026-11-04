@@ -20,7 +20,8 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Title icon-->
-    <link rel="icon" href="media/UNO.png" type="image/png">
+    <link rel="icon" type="image/png" href="media/UNO.png">
+
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -112,6 +113,13 @@
                 <img src="media/UNO.png" alt="UNO" draggable="false" class="w-[clamp(16rem,55vw,50rem)] h-auto object-contain">
             </div>
         </section>
+
+        <!-- Scroll hint arrow -->
+        <div class="absolute bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 pointer-events-none select-none">
+            <svg class="scroll-hint w-6 h-6 md:w-7 md:h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 9l6 6 6-6"/>
+            </svg>
+        </div>
 
         <!-- Section 2: Manifesto & Concept -->
         <section id="about" data-theme-trigger="light" class="h-screen w-full flex items-center px-6 md:px-16 pt-20 pb-6 md:py-12 transition-theme flex-shrink-0 relative overflow-hidden">
@@ -282,11 +290,39 @@
             <div class="max-w-4xl mx-auto w-full text-center space-y-5 md:space-y-12 relative z-10">
                 <div class="space-y-4">
                     <span data-i18n="contact_tag" class="text-sm tracking-widest2x uppercase opacity-50 block">Inquiries</span>
-                    <h2 data-i18n="contact_title" class="dynamic-serif text-5xl sm:text-8xl font-light"><i>CONTACT</i></h2>
+                    <h2 data-i18n="contact_title" class="dynamic-serif text-4xl sm:text-6xl md:text-7xl font-light"><i>COMMISSIONS &amp; CONTACT</i></h2>
                     <p data-i18n="contact_subtitle" class="font-serif text-base sm:text-2xl opacity-75">Labels, artwork, 3D designers, producers who wanna collab, anyone..</p>
                 </div>
 
-                <div class="glass-panel p-6 sm:p-16 rounded-none space-y-5 md:space-y-8 max-w-2xl mx-auto shadow-2xl border border-current/15">
+                <div class="glass-panel p-5 sm:p-10 rounded-none space-y-5 md:space-y-8 max-w-3xl mx-auto shadow-2xl border border-current/15">
+                    <!-- Commissions table -->
+                    <div class="space-y-4 pb-5 md:pb-8 border-b border-current/15">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="border-b border-current/30 text-[10px] sm:text-xs tracking-widest uppercase opacity-60">
+                                        <th data-i18n="tbl_service" class="py-3 pr-3 font-light">Service</th>
+                                        <th data-i18n="tbl_unit" class="py-3 px-3 font-light">Unit</th>
+                                        <th data-i18n="tbl_price" class="py-3 pl-3 font-light text-right">Price per unit</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-current/15 text-sm sm:text-base font-light">
+                                    <tr class="hover:bg-current/5 transition-colors">
+                                        <td data-i18n="tbl_arr" class="dynamic-serif text-lg sm:text-2xl py-4 pr-3 italic">Arrangement</td>
+                                        <td data-i18n="tbl_arr_unit" class="py-4 px-3 opacity-80">1 minute of runtime</td>
+                                        <td data-i18n="tbl_arr_price" class="dynamic-serif text-lg sm:text-2xl py-4 pl-3 text-right whitespace-nowrap">$90</td>
+                                    </tr>
+                                    <tr class="hover:bg-current/5 transition-colors">
+                                        <td data-i18n="tbl_mix" class="dynamic-serif text-lg sm:text-2xl py-4 pr-3 italic">Mixing</td>
+                                        <td data-i18n="tbl_mix_unit" class="py-4 px-3 opacity-80">30 tracks</td>
+                                        <td data-i18n="tbl_mix_price" class="dynamic-serif text-lg sm:text-2xl py-4 pl-3 text-right whitespace-nowrap">$70</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <a href="https://boosty.to/unohtumaton" target="_blank" rel="noopener noreferrer" data-i18n="commission_link" class="inline-block text-xs sm:text-sm uppercase tracking-widest2x underline underline-offset-8 decoration-1 hover:opacity-60 transition-opacity">CLICK HERE TO ORDER A COMMISSION</a>
+                    </div>
+                    
                     <div class="space-y-3">
                         <span data-i18n="contact_email_tag" class="text-xs tracking-widest uppercase opacity-60 block">Official Dispatch Email</span>
                         <a href="mailto:uno.mc.official@gmail.com" id="email-link" class="font-mono text-xl sm:text-3xl md:text-4xl font-light tracking-wider hover:opacity-75 transition-opacity block break-all">
@@ -301,7 +337,7 @@
                 </div>
 
                 <div class="pt-4 md:pt-8 border-t border-current/15 flex flex-wrap justify-center gap-10 text-xs sm:text-sm tracking-widest uppercase opacity-80">
-                    <a href="https://boosty.to/unohtumaton" target="_blank" rel="noopener noreferrer" data-i18n="boosty_link" class="hover:opacity-100 transition-opacity">OR SUPPORT US ON BOOSTY 🧡</a>
+                    <span>© 2026 UNO / unohtumaton</span>
                 </div>
             </div>
         </section>
